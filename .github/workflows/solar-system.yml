@@ -35,7 +35,7 @@ jobs:
             - name: Install node.js
               uses: actions/setup-node@v4.0.2
               with:
-                node-version: $${{ matrix.nodejs-version }}
+                node-version: ${{ matrix.nodejs-version }}
             - name: Install dependencies
               run: npm install
             - name: Run unit tests
