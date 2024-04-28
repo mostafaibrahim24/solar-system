@@ -14,34 +14,52 @@ env:
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
 jobs:
     unit-testing:
-        name: Unit Testing
-        strategy:
-          matrix:
-            os:
-              - ubuntu-latest
-              - macos-latest
-            nodejs-version:
-              - 18
-              - 19
-              - 20
-            exclude:
-              - os: macos-latest
-                nodejs-version: 18
-
-        runs-on: ${{ matrix.os }}
-        steps:
-            - name: Checkout Repo
-              uses: actions/checkout@v4
-            - name: Install node.js
-              uses: actions/setup-node@v4.0.2
-              with:
-                node-version: ${{ matrix.nodejs-version }}
-            - name: Install dependencies
-              run: npm install
-            - name: Run unit tests
-              run: npm test   
-            - name: Archive test result
-              uses: actions/upload-artifact@v4.3.3
-              with:
-                name: test-result-mocha-${{matrix.os}}-${{matrix.nodejs-version}}
-                path: test-results.xml
+      name: Unit Testing
+      strategy:
+        matrix:
+          os:
+            - ubuntu-latest
+            # - macos-latest
+          nodejs-version:
+            - 18
+            # - 19
+            # - 20
+          # exclude:
+          #   - os: macos-latest
+          #     nodejs-version: 18
+      runs-on: ${{ matrix.os }}
+      steps:
+          - name: Checkout Repo
+            uses: actions/checkout@v4
+          - name: Install node.js
+            uses: actions/setup-node@v4.0.2
+            with:
+              node-version: ${{ matrix.nodejs-version }}
+          - name: Install dependencies
+            run: npm install
+          - name: Run unit tests
+            run: npm test   
+          - name: Archive test result
+            uses: actions/upload-artifact@v4.3.3
+            with:
+              name: test-result-mocha-${{matrix.os}}-${{matrix.nodejs-version}}
+              path: test-results.xml
+    code-coverage:
+      name: Code coverage
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Repo
+          uses: actions/checkout@v4
+        - name: Install node.js
+          uses: actions/setup-node@v4.0.2
+          with:
+            node-version: 18
+        - name: Install dependencies
+          run: npm install
+        - name: Run code coverage tests
+          run: npm coverage
+        - name: Archive coverage result
+          uses: actions/upload-artifact@v4.3.3
+          with:
+            name: test-coverage-result
+            path: coverage/ #dir
