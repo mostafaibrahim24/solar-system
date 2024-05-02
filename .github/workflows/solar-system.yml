@@ -56,14 +56,17 @@ jobs:
       steps:
         - name: Checkout Repo
           uses: actions/checkout@v4
-        - name: Install node.js
-          uses: actions/setup-node@v4.0.2
-          with:
-            node-version: 18
-        - name: Install dependencies
-          run: npm install
-        - name: Cache dependencies
-          uses: actions/cache@v3
+        # - name: Install node.js
+        #   uses: actions/setup-node@v4.0.2
+        #   with:
+        #     node-version: 18
+        # - name: Cache dependencies
+        #   uses: actions/cache@v3
+        #   with:
+        #     path: node_modules
+        #     key: ${{runner.os}}-node-modules-${{hashFiles('package-lock.json')}}
+        - name: restore dep cache
+          uses: actions/cache/restore@v4
           with:
             path: node_modules
             key: ${{runner.os}}-node-modules-${{hashFiles('package-lock.json')}}
