@@ -79,6 +79,8 @@ jobs:
     Containerization:
       name: Build and push image
       runs-on: ubuntu-latest
+      permissions:
+        packages: write
       needs:
         - unit-testing
         - code-coverage
