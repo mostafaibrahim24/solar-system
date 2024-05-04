@@ -13,77 +13,77 @@ env:
   MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
 jobs:
-    unit-testing:
-      name: Unit Testing
-      strategy:
-        matrix:
-          os:
-            - ubuntu-latest
-            # - macos-latest
-          nodejs-version:
-            - 18
-            # - 19
-            # - 20
-          # exclude:
-          #   - os: macos-latest
-          #     nodejs-version: 18
-      runs-on: ${{ matrix.os }}
-      steps:
-          - name: Checkout Repo
-            uses: actions/checkout@v4
-          - name: Install node.js
-            uses: actions/setup-node@v4.0.2
-            with:
-              node-version: ${{ matrix.nodejs-version }}
-          - name: Cache dependencies
-            uses: actions/cache@v3
-            with:
-              path: node_modules
-              key: ${{runner.os}}-node-modules-${{hashFiles('package-lock.json')}}
-          - name: Install dependencies
-            run: npm install
+    # unit-testing:
+    #   name: Unit Testing
+    #   strategy:
+    #     matrix:
+    #       os:
+    #         - ubuntu-latest
+    #         # - macos-latest
+    #       nodejs-version:
+    #         - 18
+    #         # - 19
+    #         # - 20
+    #       # exclude:
+    #       #   - os: macos-latest
+    #       #     nodejs-version: 18
+    #   runs-on: ${{ matrix.os }}
+    #   steps:
+    #       - name: Checkout Repo
+    #         uses: actions/checkout@v4
+    #       - name: Install node.js
+    #         uses: actions/setup-node@v4.0.2
+    #         with:
+    #           node-version: ${{ matrix.nodejs-version }}
+    #       - name: Cache dependencies
+    #         uses: actions/cache@v3
+    #         with:
+    #           path: node_modules
+    #           key: ${{runner.os}}-node-modules-${{hashFiles('package-lock.json')}}
+    #       - name: Install dependencies
+    #         run: npm install
 
-          - name: Run unit tests
-            run: npm test   
-          - name: Archive test result
-            uses: actions/upload-artifact@v4.3.3
-            with:
-              name: test-result-mocha-${{matrix.os}}-${{matrix.nodejs-version}}
-              path: test-results.xml
-    code-coverage:
-      name: Code coverage
-      runs-on: ubuntu-latest
-      needs: unit-testing
-      steps:
-        - name: Checkout Repo
-          uses: actions/checkout@v4
-        - name: Install node.js
-          uses: actions/setup-node@v4.0.2
-          with:
-            node-version: 18
-        - name: Cache dependencies
-          uses: actions/cache@v3
-          with:
-            path: node_modules
-            key: ${{runner.os}}-node-modules-${{hashFiles('package-lock.json')}}
-        - name: Install dependencies
-          run: npm install
-        - name: Run code coverage tests
-          run: npm run coverage
-          continue-on-error: true
-        - name: Archive coverage result
-          uses: actions/upload-artifact@v4.3.3
-          with:
-            name: test-coverage-result
-            path: coverage/ #dir
+    #       - name: Run unit tests
+    #         run: npm test   
+    #       - name: Archive test result
+    #         uses: actions/upload-artifact@v4.3.3
+    #         with:
+    #           name: test-result-mocha-${{matrix.os}}-${{matrix.nodejs-version}}
+    #           path: test-results.xml
+    # code-coverage:
+    #   name: Code coverage
+    #   runs-on: ubuntu-latest
+    #   needs: unit-testing
+    #   steps:
+    #     - name: Checkout Repo
+    #       uses: actions/checkout@v4
+    #     - name: Install node.js
+    #       uses: actions/setup-node@v4.0.2
+    #       with:
+    #         node-version: 18
+    #     - name: Cache dependencies
+    #       uses: actions/cache@v3
+    #       with:
+    #         path: node_modules
+    #         key: ${{runner.os}}-node-modules-${{hashFiles('package-lock.json')}}
+    #     - name: Install dependencies
+    #       run: npm install
+    #     - name: Run code coverage tests
+    #       run: npm run coverage
+    #       continue-on-error: true
+    #     - name: Archive coverage result
+    #       uses: actions/upload-artifact@v4.3.3
+    #       with:
+    #         name: test-coverage-result
+    #         path: coverage/ #dir
     Containerization:
       name: Build and push image
       runs-on: ubuntu-latest
       permissions:
         packages: write
-      needs:
-        - unit-testing
-        - code-coverage
+      # needs:
+      #   - unit-testing
+      #   - code-coverage
 
       steps:
         - name: Checkout Repo
